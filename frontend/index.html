@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AI-powered Skill Assessment — upload your resume and job description for instant analysis, interview questions, and a personalized learning plan." />
+  <title>SkillForge AI — Skill Assessment System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ── NAVBAR ────────────────────────────────── -->
+  <header class="navbar" role="banner">
+    <div class="navbar__brand">
+      <div class="navbar__logo" aria-hidden="true">⬡</div>
+      <span class="navbar__name">SkillForge <strong>AI</strong></span>
+    </div>
+    <nav class="navbar__links" aria-label="Page sections">
+      <a href="#upload"    class="navbar__link">Upload</a>
+      <a href="#skills"    class="navbar__link">Skills</a>
+      <a href="#interview" class="navbar__link">Interview</a>
+      <a href="#gaps"      class="navbar__link">Gaps</a>
+      <a href="#learning"  class="navbar__link">Learn</a>
+    </nav>
+    <button class="navbar__toggle" id="navToggle" aria-label="Toggle navigation">☰</button>
+  </header>
+
+  <main class="main">
+
+    <!-- ── HERO / UPLOAD SECTION ─────────────────── -->
+    <section class="section section--upload" id="upload" aria-labelledby="upload-heading">
+      <div class="section__header">
+        <span class="section__badge">✦ AI-Powered</span>
+        <h1 class="section__title" id="upload-heading">Discover Your <span class="highlight">Skill Edge</span></h1>
+        <p class="section__subtitle">Upload your resume and a job description to get AI-driven insights, adaptive interviews, and a personalised learning roadmap.</p>
+      </div>
+
+      <!-- Upload Cards -->
+      <div class="upload-grid">
+
+        <!-- Resume Upload -->
+        <div class="upload-card" id="resumeCard">
+          <div class="upload-card__icon" aria-hidden="true">📄</div>
+          <h2 class="upload-card__title">Resume</h2>
+          <p class="upload-card__hint">PDF or DOCX · Max 10 MB</p>
+          <input type="file" id="resumeFile" class="upload-card__input" accept=".pdf,.docx" aria-label="Upload resume" />
+          <label for="resumeFile" class="upload-card__btn btn btn--primary">Choose File</label>
+          <div class="upload-card__info hidden" id="resumeFileInfo">
+            <span class="upload-card__filename" id="resumeFileName"></span>
+            <button class="upload-card__remove" id="resumeRemove" aria-label="Remove resume">✕</button>
+          </div>
+          <!-- Paste-text fallback -->
+          <button class="btn btn--ghost upload-card__paste-toggle" id="toggleResumeText">Or paste text</button>
+          <textarea class="upload-card__textarea hidden" id="resumeText" placeholder="Paste your full resume text here…" rows="6" aria-label="Paste resume text"></textarea>
+        </div>
+
+        <div class="upload-divider" aria-hidden="true">⚡</div>
+
+        <!-- Job Description Upload -->
+        <div class="upload-card" id="jdCard">
+          <div class="upload-card__icon" aria-hidden="true">📋</div>
+          <h2 class="upload-card__title">Job Description</h2>
+          <p class="upload-card__hint">PDF, DOCX or paste text</p>
+          <input type="file" id="jdFile" class="upload-card__input" accept=".pdf,.docx" aria-label="Upload job description" />
+          <label for="jdFile" class="upload-card__btn btn btn--primary">Choose File</label>
+          <div class="upload-card__info hidden" id="jdFileInfo">
+            <span class="upload-card__filename" id="jdFileName"></span>
+            <button class="upload-card__remove" id="jdRemove" aria-label="Remove job description">✕</button>
+          </div>
+          <button class="btn btn--ghost upload-card__paste-toggle" id="toggleJdText">Or paste text</button>
+          <textarea class="upload-card__textarea hidden" id="jdText" placeholder="Paste the full job description here…" rows="6" aria-label="Paste job description text"></textarea>
+        </div>
+      </div>
+
+      <!-- Progress bar (hidden until analysis starts) -->
+      <div class="progress hidden" id="progressBar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+        <div class="progress__fill" id="progressFill"></div>
+        <p class="progress__label" id="progressLabel">Initialising…</p>
+      </div>
+
+      <!-- Analyse CTA -->
+      <div class="upload-actions">
+        <button class="btn btn--cta" id="analyzeBtn" disabled>
+          <span class="btn__text" id="analyzeBtnText">🔍 Analyse Candidate</span>
+          <span class="btn__spinner hidden" id="analyzeBtnSpinner" aria-hidden="true"></span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ── SKILLS ANALYSIS SECTION ───────────────── -->
+    <section class="section hidden" id="skills" aria-labelledby="skills-heading">
+      <div class="section__header">
+        <div class="section__icon" aria-hidden="true">🎯</div>
+        <h2 class="section__title" id="skills-heading">Skill Analysis</h2>
+        <p class="section__subtitle">Extracted skills and match overview</p>
+      </div>
+
+      <div class="skills-dashboard">
+
+        <!-- Match Score Ring -->
+        <div class="card card--score" id="matchScoreCard">
+          <h3 class="card__label">Match Score</h3>
+          <div class="score-ring" id="scoreRing">
+            <svg class="score-ring__svg" viewBox="0 0 120 120" aria-hidden="true">
+              <circle class="score-ring__track" cx="60" cy="60" r="52"/>
+              <circle class="score-ring__fill"  cx="60" cy="60" r="52" id="scoreRingFill"/>
+            </svg>
+            <span class="score-ring__value" id="scoreValue">0%</span>
+          </div>
+        </div>
+
+        <!-- JD Skills -->
+        <div class="card" id="jdSkillsCard">
+          <h3 class="card__label">Required by Job</h3>
+          <div class="chip-cloud" id="jdSkillsCloud"></div>
+        </div>
+
+        <!-- Resume Skills -->
+        <div class="card" id="resumeSkillsCard">
+          <h3 class="card__label">Found in Resume</h3>
+          <div class="chip-cloud" id="resumeSkillsCloud"></div>
+        </div>
+
+        <!-- Missing Skills -->
+        <div class="card" id="missingSkillsCard">
+          <h3 class="card__label">Missing Skills</h3>
+          <div class="chip-cloud chip-cloud--missing" id="missingSkillsCloud"></div>
+        </div>
+
+        <!-- Extra Skills (in resume but not in JD) -->
+        <div class="card" id="extraSkillsCard">
+          <h3 class="card__label">Extra Skills <span style="font-size:0.75em;opacity:0.6">(in resume, not in JD)</span></h3>
+          <div class="chip-cloud" id="extraSkillsCloud"></div>
+        </div>
+
+        <!-- Skill Match Table -->
+        <div class="card card--full" id="matchTableCard">
+          <h3 class="card__label">Skill Breakdown</h3>
+          <div class="table-scroll">
+            <table class="skill-table" id="skillTable">
+              <thead>
+                <tr>
+                  <th scope="col">Skill</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Proficiency</th>
+                  <th scope="col">Evidence</th>
+                  <th scope="col">Match</th>
+                </tr>
+              </thead>
+              <tbody id="skillTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="section__actions">
+        <button class="btn btn--cta" id="startInterviewBtn">Start Interview →</button>
+      </div>
+    </section>
+
+    <!-- ── INTERVIEW SECTION ──────────────────────── -->
+    <section class="section hidden" id="interview" aria-labelledby="interview-heading">
+      <div class="section__header">
+        <div class="section__icon" aria-hidden="true">💬</div>
+        <h2 class="section__title" id="interview-heading">Adaptive Interview</h2>
+        <p class="section__subtitle">Answer questions to evaluate each skill</p>
+      </div>
+
+      <!-- Interview Controls -->
+      <div class="card interview-controls">
+        <div class="form-group">
+          <label class="form-label" for="skillSelect">Skill</label>
+          <select class="form-select" id="skillSelect" aria-label="Select skill"></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="difficultySelect">Difficulty</label>
+          <select class="form-select" id="difficultySelect" aria-label="Select difficulty">
+            <option value="easy">Easy</option>
+            <option value="medium" selected>Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+        </div>
+        <button class="btn btn--primary" id="generateQuestionsBtn">Generate Questions</button>
+      </div>
+
+      <!-- Question Placeholder -->
+      <div class="card interview-placeholder" id="interviewPlaceholder">
+        <span class="placeholder-icon" aria-hidden="true">🤖</span>
+        <p>Select a skill above and click <strong>Generate Questions</strong> to begin.</p>
+      </div>
+
+      <!-- Active Question Card -->
+      <div class="card question-card hidden" id="questionCard">
+        <div class="question-card__meta">
+          <span class="badge badge--number" id="questionBadge">Q1</span>
+          <span class="badge badge--difficulty" id="difficultyBadge">Medium</span>
+          <span class="badge badge--skill" id="skillBadge">Skill</span>
+        </div>
+        <p class="question-card__text" id="questionText"></p>
+        <div class="question-card__hints hidden" id="hintsBox">
+          <h4 class="hints__title">Key points to cover:</h4>
+          <ul class="hints__list" id="hintsList"></ul>
+        </div>
+        <textarea class="question-card__answer" id="answerInput" placeholder="Type your answer here…" rows="5" aria-label="Your answer"></textarea>
+        <div class="question-card__actions">
+          <button class="btn btn--ghost" id="showHintsBtn">Show Hints</button>
+          <button class="btn btn--primary" id="submitAnswerBtn">Submit Answer ↗</button>
+        </div>
+      </div>
+
+      <!-- Question Navigation -->
+      <div class="question-nav hidden" id="questionNav">
+        <button class="btn btn--ghost" id="prevQuestionBtn" disabled>← Prev</button>
+        <span class="question-nav__counter" id="questionCounter">1 / 3</span>
+        <button class="btn btn--ghost" id="nextQuestionBtn">Next →</button>
+      </div>
+
+      <!-- Evaluation Result Card -->
+      <div class="card eval-card hidden" id="evalCard">
+        <div class="eval-card__header">
+          <h3 class="eval-card__title">Evaluation Result</h3>
+          <div class="eval-card__score" id="evalFinalScore">0 / 10</div>
+        </div>
+
+        <div class="eval-metrics" id="evalMetrics">
+          <div class="eval-metric">
+            <span class="eval-metric__label">Conceptual Understanding</span>
+            <div class="eval-metric__bar"><div class="eval-metric__fill" id="evalConceptual"></div></div>
+            <span class="eval-metric__val" id="evalConceptualVal">0</span>
+          </div>
+          <div class="eval-metric">
+            <span class="eval-metric__label">Practical Knowledge</span>
+            <div class="eval-metric__bar"><div class="eval-metric__fill" id="evalPractical"></div></div>
+            <span class="eval-metric__val" id="evalPracticalVal">0</span>
+          </div>
+          <div class="eval-metric">
+            <span class="eval-metric__label">Clarity</span>
+            <div class="eval-metric__bar"><div class="eval-metric__fill" id="evalClarity"></div></div>
+            <span class="eval-metric__val" id="evalClarityVal">0</span>
+          </div>
+          <div class="eval-metric">
+            <span class="eval-metric__label">Confidence</span>
+            <div class="eval-metric__bar"><div class="eval-metric__fill" id="evalConfidence"></div></div>
+            <span class="eval-metric__val" id="evalConfidenceVal">0</span>
+          </div>
+        </div>
+
+        <div class="eval-card__feedback">
+          <h4>Feedback</h4>
+          <p id="evalFeedbackText"></p>
+        </div>
+        <div class="eval-card__correct">
+          <h4>Model Answer</h4>
+          <p id="evalCorrectText"></p>
+        </div>
+        <div class="eval-card__next">
+          Next difficulty: <span class="badge badge--difficulty" id="evalNextDiff"></span>
+        </div>
+      </div>
+
+      <div class="section__actions">
+        <button class="btn btn--cta hidden" id="runGapBtn">Run Gap Analysis →</button>
+      </div>
+    </section>
+
+    <!-- ── GAP ANALYSIS SECTION ───────────────────── -->
+    <section class="section hidden" id="gaps" aria-labelledby="gaps-heading">
+      <div class="section__header">
+        <div class="section__icon" aria-hidden="true">📊</div>
+        <h2 class="section__title" id="gaps-heading">Gap Analysis</h2>
+        <p class="section__subtitle">Priority-ranked skill gaps to close</p>
+      </div>
+
+      <!-- Readiness Overview -->
+      <div class="card readiness-card" id="readinessCard">
+        <h3 class="card__label">Overall Readiness</h3>
+        <div class="readiness-bar">
+          <div class="readiness-bar__fill" id="readinessFill"></div>
+        </div>
+        <span class="readiness-bar__value" id="readinessValue">0%</span>
+        <div class="priority-pills">
+          <div class="pill pill--high"><span id="highCount">0</span> High</div>
+          <div class="pill pill--medium"><span id="mediumCount">0</span> Medium</div>
+          <div class="pill pill--low"><span id="lowCount">0</span> Low</div>
+        </div>
+      </div>
+
+      <!-- Gap Cards Grid -->
+      <div class="gap-grid" id="gapGrid"></div>
+
+      <div class="section__actions">
+        <button class="btn btn--cta" id="genLearningBtn">Generate Learning Plan →</button>
+      </div>
+    </section>
+
+    <!-- ── LEARNING PLAN SECTION ──────────────────── -->
+    <section class="section hidden" id="learning" aria-labelledby="learning-heading">
+      <div class="section__header">
+        <div class="section__icon" aria-hidden="true">🚀</div>
+        <h2 class="section__title" id="learning-heading">Learning Roadmap</h2>
+        <p class="section__subtitle">Your personalised path to mastery</p>
+      </div>
+
+      <!-- Preferences -->
+      <div class="card learning-prefs">
+        <div class="form-group">
+          <label class="form-label" for="learnHours">Hours per day</label>
+          <input class="form-input" type="number" id="learnHours" value="2" min="0.5" max="12" step="0.5" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="learnWeeks">Target weeks</label>
+          <input class="form-input" type="number" id="learnWeeks" value="8" min="1" max="52" />
+        </div>
+      </div>
+
+      <!-- Summary Banner -->
+      <div class="card plan-summary hidden" id="planSummary">
+        <div class="plan-summary__stats">
+          <div class="plan-stat"><span class="plan-stat__val" id="planTotalDays">0</span><span class="plan-stat__lbl">Total Days</span></div>
+          <div class="plan-stat"><span class="plan-stat__val" id="planHours">0</span><span class="plan-stat__lbl">Hours/Day</span></div>
+          <div class="plan-stat"><span class="plan-stat__val" id="planSkillsCount">0</span><span class="plan-stat__lbl">Skills</span></div>
+        </div>
+        <p class="plan-summary__text" id="planSummaryText"></p>
+      </div>
+
+      <!-- Individual Skill Plans -->
+      <div class="learning-plans" id="learningPlans"></div>
+    </section>
+
+  </main>
+
+  <!-- ── TOAST NOTIFICATIONS ────────────────────── -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
