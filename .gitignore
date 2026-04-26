@@ -30,5 +30,6 @@ Thumbs.db
 # Local test data and scripts
 *.pdf
 *.txt
+!requirements.txt
 test_*.py
 create_dummy_pdfs.py

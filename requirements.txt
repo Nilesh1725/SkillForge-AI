@@ -13,3 +13,4 @@ langchain-huggingface>=0.1.0
 huggingface-hub>=0.25.0
 langchain-google-genai>=2.0.0
 reportlab
+google-genai
