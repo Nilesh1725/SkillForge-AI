@@ -2,6 +2,9 @@
 
 This document provides realistic examples of requests and responses for the AI Interview Agent's API.
 
+> [!NOTE]
+> These examples are for **structural reference only**. The actual quality, accuracy, and depth of the LLM responses depend entirely on the model being used (Gemini, LLaMA, etc.) and the quality of the input text provided.
+
 ---
 
 ## 🔍 `POST /analyze`
