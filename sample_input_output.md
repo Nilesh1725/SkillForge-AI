@@ -3,7 +3,11 @@
 This document provides realistic examples of requests and responses for the AI Interview Agent's API.
 
 > [!NOTE]
-> These examples are for **structural reference only**. The actual quality, accuracy, and depth of the LLM responses depend entirely on the model being used (Gemini, LLaMA, etc.) and the quality of the input text provided.
+> These examples are for **structural reference only**. The actual quality, accuracy, and depth of the output depend on several factors:
+> 1. The **LLM model** being used (Gemini, LLaMA, etc.).
+> 2. The **input text** provided (JD and Resume).
+> 3. The **system prompts** configured in the backend.
+> 4. The interaction between the **LLM and the deterministic backend logic** used for matching and scoring.
 
 ---
 
