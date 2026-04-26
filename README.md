@@ -277,6 +277,11 @@ project/
 | `LLM_MAX_NEW_TOKENS` | `8192` | Max tokens in LLM response |
 | `LLM_TEMPERATURE` | `0.3` | LLM temperature (lower = more deterministic) |
 
-## 📝 License
+## 📝 Documentation
+- [Logic & Data Flow](logic.md) — Detailed breakdown of matching algorithms.
+- [Deployment Guide](DEPLOYMENT.md) — Steps for Render, Docker, and production.
+- [Contributing](CONTRIBUTING.md) — How to add skills and run tests.
+- [Changelog](CHANGELOG.md) — Project history.
 
+## 📝 License
 MIT
