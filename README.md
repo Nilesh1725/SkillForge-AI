@@ -281,6 +281,7 @@ project/
 - [Logic & Data Flow](logic.md) — Detailed breakdown of matching algorithms.
 - [Deployment Guide](DEPLOYMENT.md) — Steps for Render, Docker, and production.
 - [Contributing](CONTRIBUTING.md) — How to add skills and run tests.
+- [Sample Input/Output](sample_input_output.md) — Examples of API requests and responses.
 - [Changelog](CHANGELOG.md) — Project history.
 
 ## 📝 License
