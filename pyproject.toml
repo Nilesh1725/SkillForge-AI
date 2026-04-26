@@ -1,7 +1,12 @@
 [project]
-name = "ai-agent"
-version = "0.1.0"
-description = "Add your description here"
+name = "SkillForge AI"
+version = "1.0"
+description = "Skill Forge AI is an intelligent skill assessment and adaptive interview platform powered by a production-ready 
+FastAPI backend and multi-provider LLM orchestration (Gemini and Hugging Face). It utilizes a sophisticated 5-layer deterministic 
+matching engine to evaluate candidates by extracting and comparing skills from resumes and job descriptions with high semantic accuracy.
+The system generates difficulty-adjusted interview questions, provides structured multi-dimensional scoring for answers, and performs automated 
+skill gap categorization. Each assessment culminates in a personalized, week-by-week learning roadmap designed to bridge identified proficiency gaps 
+through curated resource recommendations. "
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = []
